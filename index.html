@@ -59,7 +59,7 @@
         .card {
             display: none;
             background: #ffffff;
-            padding: 30px 25px;
+            padding: 35px 25px 25px 25px;
             border-radius: 20px;
             box-shadow: 0 15px 35px rgba(0,0,0,0.15);
             max-width: 90vw;
@@ -81,52 +81,37 @@
         }
 
         .wish-text {
-            font-size: 1.1rem;
+            font-size: 1.15rem;
             color: #4a4a4a;
             line-height: 1.6;
-            min-height: 80px;
+            min-height: 90px;
             display: flex;
             align-items: center;
             justify-content: center;
             margin-bottom: 20px;
+            font-style: italic;
         }
 
-        /* Nút bấm */
-        .btn-group {
-            display: flex;
-            gap: 10px;
-            justify-content: center;
-            flex-wrap: wrap;
-        }
-
-        .btn {
-            background: #ff4757;
+        /* Nút Âm Thanh */
+        .btn-music {
+            background: #70a1ff;
             color: white;
             border: none;
-            padding: 10px 18px;
+            padding: 10px 20px;
             border-radius: 25px;
             font-size: 0.95rem;
             font-weight: bold;
             cursor: pointer;
-            box-shadow: 0 4px 10px rgba(255, 71, 87, 0.3);
+            box-shadow: 0 4px 10px rgba(112, 161, 255, 0.3);
             transition: all 0.2s ease;
         }
 
-        .btn:hover {
-            background: #e84118;
+        .btn-music:hover {
+            background: #1e90ff;
             transform: translateY(-2px);
         }
 
-        .btn-secondary {
-            background: #70a1ff;
-            box-shadow: 0 4px 10px rgba(112, 161, 255, 0.3);
-        }
-
-        .btn-secondary:hover {
-            background: #1e90ff;
-        }
-
-        /* Hiệu ứng bong bóng tim bay */
+        /* Hiệu ứng tim bay */
         .heart {
             position: absolute;
             color: #ff6b81;
@@ -143,7 +128,7 @@
 </head>
 <body>
 
-    <!-- Âm thanh nền (Thay link nhạc của bạn tại đây) -->
+    <!-- Âm thanh nền (Thay link nhạc mp3 của bạn tại đây) -->
     <audio id="bg-music" loop>
         <source src="https://cdn.pixabay.com/download/audio/2022/05/27/audio_1808fbf07a.mp3" type="audio/mpeg">
     </audio>
@@ -152,55 +137,51 @@
         <!-- Hộp quà ban đầu -->
         <div id="gift-wrapper">
             <div class="gift-box" onclick="openGift()">🎁</div>
-            <div class="instruction">Bấm vào hộp quà để mở điều bất ngờ! ✨</div>
+            <div class="instruction">Bấm vào hộp quà để nhận điều may mắn! ✨</div>
         </div>
 
-        <!-- Lá thư chúc mừng -->
+        <!-- Lá thư ngẫu nhiên -->
         <div class="card" id="card">
-            <h2>🌸 Chúc Mừng 20/10 🌸</h2>
+            <h2>🌸 Lời Chúc Dành Cho Bạn 🌸</h2>
             <div class="wish-text" id="wish"></div>
-            <div class="btn-group">
-                <button class="btn" onclick="getRandomWish()">Lá thư khác 💌</button>
-                <button class="btn btn-secondary" onclick="toggleMusic()">Bật/Tắt Nhạc 🎵</button>
+            <div>
+                <button class="btn-music" onclick="toggleMusic()">Bật / Tắt Nhạc 🎵</button>
             </div>
         </div>
     </div>
 
     <script>
-        // 📜 DANH SÁCH LỜI CHÚC (Bạn thoải mái thêm/sửa/xóa các dòng ở đây)
+        // 📜 DANH SÁCH LỜI CHÚC NGẪU NHIÊN (Bạn thay đổi/thêm lời chúc ở đây)
         const wishes = [
-            "Chúc bạn một ngày 20/10 thật nhiều niềm vui, luôn xinh đẹp, rạng rỡ và hạnh phúc bên những người thân yêu! 💐",
-            "Chúc bạn luôn giữ vững nụ cười trên môi, công việc thuận lợi và gặt hái được thật nhiều thành công nhé! ✨",
-            "Ngày 20/10 chúc bạn nhận được thật nhiều quà, nhiều hoa và tràn ngập những lời chúc ngọt ngào nhất! 🎁",
-            "Cảm ơn vì đã luôn là một phần tuyệt vời. Chúc bạn mỗi ngày trôi qua đều ngọt ngào và bình yên như ngày hôm nay! 💖",
-            "Chúc bạn tuổi mới/ngày mới luôn yêu đời, tự tin bước đi trên con đường mình chọn và luôn tỏa sáng! 🌟"
+            "« Chúc bạn một ngày 20/10 thật nhiều niềm vui, luôn xinh đẹp, rạng rỡ và tràn ngập hạnh phúc! 💐 »",
+            "« Chúc bạn luôn giữ vững nụ cười trên môi, mọi điều may mắn và thành công luôn mỉm cười với bạn! ✨ »",
+            "« Ngày 20/10 chúc bạn nhận được thật nhiều quà, nhiều hoa và trọn vẹn sự yêu thương! 🎁 »",
+            "« Cảm ơn bạn vì đã luôn là một mảnh ghép tuyệt vời. Chúc bạn một ngày ngọt ngào và dịu dàng như hoa! 💖 »",
+            "« Chúc bạn luôn tự tin bước đi trên con đường mình đã chọn, luôn tỏa sáng và hạnh phúc mỗi ngày! 🌟 »"
         ];
 
         let isMusicPlaying = false;
         const music = document.getElementById("bg-music");
 
-        // Hàm mở hộp quà
+        // Hàm khi người dùng bấm mở hộp quà
         function openGift() {
             document.getElementById("gift-wrapper").style.display = "none";
             document.getElementById("card").style.display = "block";
             
-            // Tự động bật nhạc khi mở quà
+            // Tự động bốc 1 lời chúc ngẫu nhiên từ danh sách
+            const randomIndex = Math.floor(Math.random() * wishes.length);
+            document.getElementById("wish").innerText = wishes[randomIndex];
+
+            // Tự động phát nhạc
             music.play().then(() => {
                 isMusicPlaying = true;
-            }).catch(e => console.log("Trình duyệt chặn tự động phát nhạc"));
+            }).catch(e => console.log("Trình duyệt hạn chế tự động phát nhạc"));
 
-            getRandomWish();
+            // Phun tim lung linh
             createHeartRain();
         }
 
-        // Hàm lấy lời chúc ngẫu nhiên
-        function getRandomWish() {
-            const randomIndex = Math.floor(Math.random() * wishes.length);
-            document.getElementById("wish").innerText = wishes[randomIndex];
-            createSingleHeart();
-        }
-
-        // Bật / Tắt nhạc
+        // Bật / Tắt Nhạc
         function toggleMusic() {
             if (isMusicPlaying) {
                 music.pause();
@@ -211,7 +192,7 @@
             }
         }
 
-        // Tạo hiệu ứng tim bay ngẫu nhiên
+        // Tạo hiệu ứng tim bay
         function createSingleHeart() {
             const heart = document.createElement("div");
             heart.classList.add("heart");
@@ -224,8 +205,8 @@
         }
 
         function createHeartRain() {
-            for (let i = 0; i < 15; i++) {
-                setTimeout(createSingleHeart, i * 200);
+            for (let i = 0; i < 20; i++) {
+                setTimeout(createSingleHeart, i * 150);
             }
         }
     </script>
