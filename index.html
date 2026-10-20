@@ -30,29 +30,45 @@
             width: 100%;
             height: 100%;
             z-index: 1;
+            overflow: hidden;
         }
 
         .bg-slide {
             position: absolute;
-            top: -5%;
-            left: -5%;
-            width: 110%;
-            height: 110%;
+            /* Phóng to khung ảnh lên 130% để có không gian chạy qua lại mà không bị lộ viền đen */
+            top: -15%;
+            left: -15%;
+            width: 130%;
+            height: 130%;
             background-size: cover;
             background-position: center;
             opacity: 0;
-            transition: opacity 1.8s ease-in-out;
+            transition: opacity 2s ease-in-out;
+            /* Tất cả ảnh đều chạy animation liên tục */
+            animation: moveAround 12s infinite alternate ease-in-out;
         }
 
+        /* Cho các slide chạy hiệu ứng lệch nhịp/ngược hướng nhau cho đa dạng */
+        .bg-slide:nth-child(even) {
+            animation-direction: alternate-reverse;
+        }
+
+        /* Khi slide active thì hiện lên */
         .bg-slide.active {
             opacity: 1;
-            animation: panAndZoom 8s ease-in-out infinite alternate;
         }
 
-        @keyframes panAndZoom {
-            0% { transform: scale(1.05) translate(-2%, -2%); }
-            50% { transform: scale(1.12) translate(2%, 1%); }
-            100% { transform: scale(1.05) translate(-1%, 2%); }
+        /* Animation lướt qua lại thật rõ ràng (Pan & Zoom) */
+        @keyframes moveAround {
+            0% {
+                transform: translate(-5%, -5%) scale(1);
+            }
+            50% {
+                transform: translate(5%, 3%) scale(1.08);
+            }
+            100% {
+                transform: translate(-3%, 5%) scale(1.03);
+            }
         }
 
         .overlay {
@@ -177,7 +193,7 @@
     <div class="bg-slider" id="bgSlider"></div>
     <div class="overlay"></div>
 
-    <!-- Nhạc nền: Đã thêm autoplay & file mysong.mp3 -->
+    <!-- Nhạc nền -->
     <audio id="bg-music" loop autoplay src="mysong.mp3"></audio>
 
     <div class="container">
@@ -226,15 +242,16 @@
             sliderContainer.appendChild(slide);
         });
 
+        // Chuyển ảnh nền mỗi 5 giây
         let currentSlide = 0;
         const slides = document.querySelectorAll(".bg-slide");
         setInterval(() => {
             slides[currentSlide].classList.remove("active");
             currentSlide = (currentSlide + 1) % slides.length;
             slides[currentSlide].classList.add("active");
-        }, 4500);
+        }, 5000);
 
-        // 🎵 QUẢN LÝ TỰ ĐỘNG PHÁT NHẠC
+        // 🎵 QUẢN LÝ PHÁT NHẠC
         let isMusicPlaying = false;
         const music = document.getElementById("bg-music");
 
@@ -243,15 +260,12 @@
                 music.play().then(() => {
                     isMusicPlaying = true;
                 }).catch(e => {
-                    console.log("Trình duyệt chờ tương tác từ người dùng để phát nhạc.");
+                    console.log("Trình duyệt chờ tương tác để phát nhạc.");
                 });
             }
         }
 
-        // Tự động thử phát nhạc ngay khi load web xong
         window.addEventListener("load", playMusic);
-
-        // Phát nhạc ngay khi người dùng chạm/click vào bất cứ đâu trên màn hình
         document.addEventListener("click", playMusic, { once: true });
         document.addEventListener("touchstart", playMusic, { once: true });
 
