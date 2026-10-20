@@ -71,7 +71,7 @@
             }
         }
 
-        /* ----- CONTAINER CHÍNH (Đã tối ưu cho mobile) ----- */
+        /* ----- CONTAINER CHÍNH ----- */
         .container {
             text-align: center;
             position: relative;
@@ -150,11 +150,19 @@
             word-wrap: break-word;
         }
 
-        .btn-music {
+        /* Nhóm nút bấm */
+        .btn-group {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .btn {
             background: #ff4757;
             color: white;
             border: none;
-            padding: 12px 24px;
+            padding: 10px 18px;
             border-radius: 25px;
             font-size: 0.95rem;
             font-weight: bold;
@@ -163,8 +171,13 @@
             transition: all 0.2s ease;
         }
 
-        .btn-music:active {
+        .btn:active {
             transform: scale(0.95);
+        }
+
+        .btn-secondary {
+            background: #70a1ff;
+            box-shadow: 0 4px 12px rgba(112, 161, 255, 0.4);
         }
 
         .heart {
@@ -205,12 +218,13 @@
             <div class="instruction">Bấm vào hộp quà để mở điều đặc biệt! ✨</div>
         </div>
 
-        <!-- Lá thư ngẫu nhiên -->
+        <!-- Lá thư chúc mừng -->
         <div class="card" id="card">
             <h2>🌸 Lời Chúc Dành Cho Bạn 🌸</h2>
             <div class="wish-text" id="wish"></div>
-            <div>
-                <button class="btn-music" onclick="toggleMusic()">Bật / Tắt Nhạc 🎵</button>
+            <div class="btn-group">
+                <button class="btn" onclick="getRandomWish()">Lá thư khác 💌</button>
+                <button class="btn btn-secondary" onclick="toggleMusic()">Bật / Tắt Nhạc 🎵</button>
             </div>
         </div>
     </div>
@@ -271,15 +285,21 @@
         document.addEventListener("click", playMusic, { once: true });
         document.addEventListener("touchstart", playMusic, { once: true });
 
+        // Hàm mở hộp quà
         function openGift() {
             document.getElementById("gift-wrapper").style.display = "none";
             document.getElementById("card").style.display = "block";
             
-            const randomIndex = Math.floor(Math.random() * wishes.length);
-            document.getElementById("wish").innerText = wishes[randomIndex];
-
+            getRandomWish();
             playMusic();
             createHeartRain();
+        }
+
+        // Hàm lấy lời chúc ngẫu nhiên tiếp theo
+        function getRandomWish() {
+            const randomIndex = Math.floor(Math.random() * wishes.length);
+            document.getElementById("wish").innerText = wishes[randomIndex];
+            createSingleHeart();
         }
 
         function toggleMusic() {
