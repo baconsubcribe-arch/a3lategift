@@ -22,7 +22,7 @@
             background-color: #000;
         }
 
-        /* ----- SLIDER ẢNH NỀN ----- */
+        /* ----- SLIDER ẢNH NỀN LƯỚT QUA LẠI ----- */
         .bg-slider {
             position: absolute;
             top: 0;
@@ -34,30 +34,34 @@
 
         .bg-slide {
             position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
+            top: -5%;
+            left: -5%;
+            width: 110%;
+            height: 110%;
             background-size: cover;
             background-position: center;
             opacity: 0;
-            transition: opacity 1.5s ease-in-out, transform 6s ease-in-out;
-            transform: scale(1);
+            transition: opacity 1.8s ease-in-out;
         }
 
         .bg-slide.active {
             opacity: 1;
-            transform: scale(1.08); /* Hiệu ứng phóng to nhẹ giúp ảnh sống động */
+            animation: panAndZoom 8s ease-in-out infinite alternate;
         }
 
-        /* Lớp phủ làm tối/hồng nhẹ nền để nổi bật hộp quà & thư */
+        @keyframes panAndZoom {
+            0% { transform: scale(1.05) translate(-2%, -2%); }
+            50% { transform: scale(1.12) translate(2%, 1%); }
+            100% { transform: scale(1.05) translate(-1%, 2%); }
+        }
+
         .overlay {
             position: absolute;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0, 0, 0, 0.45); /* Làm mờ ảnh nền một chút để dễ đọc chữ */
+            background: rgba(0, 0, 0, 0.45);
             z-index: 2;
         }
 
@@ -75,7 +79,7 @@
             transition: transform 0.3s ease;
             animation: bounce 1.5s infinite alternate;
             user-select: none;
-            filter: drop-shadow(0 10px 15px rgba(0,0,0,0.3));
+            filter: drop-shadow(0 10px 15px rgba(0,0,0,0.4));
         }
 
         .gift-box:hover {
@@ -100,10 +104,10 @@
         .card {
             display: none;
             background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(5px);
+            backdrop-filter: blur(8px);
             padding: 35px 25px 25px 25px;
             border-radius: 20px;
-            box-shadow: 0 15px 35px rgba(0,0,0,0.3);
+            box-shadow: 0 15px 35px rgba(0,0,0,0.4);
             max-width: 90vw;
             width: 400px;
             border: 2px solid #ffb6c1;
@@ -134,7 +138,6 @@
             font-style: italic;
         }
 
-        /* Nút âm thanh */
         .btn-music {
             background: #ff4757;
             color: white;
@@ -153,7 +156,6 @@
             transform: translateY(-2px);
         }
 
-        /* Hiệu ứng tim bay */
         .heart {
             position: absolute;
             color: #ff6b81;
@@ -171,14 +173,12 @@
 </head>
 <body>
 
-    <!-- Slider Ảnh Nền (Thay danh sách tên ảnh của bạn ở đây) -->
+    <!-- Slider Ảnh Nền -->
     <div class="bg-slider" id="bgSlider"></div>
     <div class="overlay"></div>
 
-    <!-- Nhạc nền (Thay tên file mp3 của bạn) -->
-    <audio id="bg-music" loop>
-        <source src="mysong.mp3" type="audio/mpeg">
-    </audio>
+    <!-- Nhạc nền: Đã thêm autoplay & file mysong.mp3 -->
+    <audio id="bg-music" loop autoplay src="mysong.mp3"></audio>
 
     <div class="container">
         <!-- Hộp quà ban đầu -->
@@ -189,7 +189,7 @@
 
         <!-- Lá thư ngẫu nhiên -->
         <div class="card" id="card">
-            <h2> Lời Chúc Dành Cho Bạn </h2>
+            <h2>🌸 Lời Chúc Dành Cho Bạn 🌸</h2>
             <div class="wish-text" id="wish"></div>
             <div>
                 <button class="btn-music" onclick="toggleMusic()">Bật / Tắt Nhạc 🎵</button>
@@ -198,26 +198,25 @@
     </div>
 
     <script>
-        // 🖼️ 1. DANH SÁCH TÊN BỨC ẢNH CỦA BẠN (Đã upload lên GitHub)
+        // 🖼️ 1. DANH SÁCH ẢNH NỀN
         const myPhotos = [
             "anh1.jpg",
             "anh2.jpg",
             "anh3.jpg",
             "anh4.jpg",
-            "anh5.jpg",
-            "anh6.jpg"
+            "anh5.jpg"
         ];
 
         // 📜 2. DANH SÁCH LỜI CHÚC NGẪU NHIÊN
         const wishes = [
-            "« Chúc bạn một ngày 20/10 thật nhiều niềm vui, luôn xinh đẹp, rạng rỡ và tràn ngập hạnh phúc!  »",
-            "« Chúc bạn luôn giữ vững nụ cười trên môi, mọi điều may mắn và thành công luôn mỉm cười với bạn!  »",
-            "« Ngày 20/10 chúc bạn nhận được thật nhiều quà, nhiều hoa và trọn vẹn sự yêu thương!  »",
-            "« Cảm ơn bạn vì đã luôn là một mảnh ghép tuyệt vời. Chúc bạn một ngày ngọt ngào và dịu dàng như hoa!  »",
-            "« Chúc bạn luôn tự tin bước đi trên con đường mình đã chọn, luôn tỏa sáng và hạnh phúc mỗi ngày!  »"
+            "« Chúc bạn một ngày 20/10 thật nhiều niềm vui, luôn xinh đẹp, rạng rỡ và tràn ngập hạnh phúc! 💐 »",
+            "« Chúc bạn luôn giữ vững nụ cười trên môi, mọi điều may mắn và thành công luôn mỉm cười với bạn! ✨ »",
+            "« Ngày 20/10 chúc bạn nhận được thật nhiều quà, nhiều hoa và trọn vẹn sự yêu thương! 🎁 »",
+            "« Cảm ơn bạn vì đã luôn là một mảnh ghép tuyệt vời. Chúc bạn một ngày ngọt ngào và dịu dàng như hoa! 💖 »",
+            "« Chúc bạn luôn tự tin bước đi trên con đường mình đã chọn, luôn tỏa sáng và hạnh phúc mỗi ngày! 🌟 »"
         ];
 
-        // Khởi tạo Slide ảnh
+        // Khởi tạo Slider
         const sliderContainer = document.getElementById("bgSlider");
         myPhotos.forEach((photoUrl, index) => {
             const slide = document.createElement("div");
@@ -227,18 +226,34 @@
             sliderContainer.appendChild(slide);
         });
 
-        // Tự động chuyển ảnh nền sau mỗi 3.5 giây
         let currentSlide = 0;
         const slides = document.querySelectorAll(".bg-slide");
         setInterval(() => {
             slides[currentSlide].classList.remove("active");
             currentSlide = (currentSlide + 1) % slides.length;
             slides[currentSlide].classList.add("active");
-        }, 3500);
+        }, 4500);
 
-        // Phát nhạc & Mở quà
+        // 🎵 QUẢN LÝ TỰ ĐỘNG PHÁT NHẠC
         let isMusicPlaying = false;
         const music = document.getElementById("bg-music");
+
+        function playMusic() {
+            if (!isMusicPlaying) {
+                music.play().then(() => {
+                    isMusicPlaying = true;
+                }).catch(e => {
+                    console.log("Trình duyệt chờ tương tác từ người dùng để phát nhạc.");
+                });
+            }
+        }
+
+        // Tự động thử phát nhạc ngay khi load web xong
+        window.addEventListener("load", playMusic);
+
+        // Phát nhạc ngay khi người dùng chạm/click vào bất cứ đâu trên màn hình
+        document.addEventListener("click", playMusic, { once: true });
+        document.addEventListener("touchstart", playMusic, { once: true });
 
         function openGift() {
             document.getElementById("gift-wrapper").style.display = "none";
@@ -247,10 +262,7 @@
             const randomIndex = Math.floor(Math.random() * wishes.length);
             document.getElementById("wish").innerText = wishes[randomIndex];
 
-            music.play().then(() => {
-                isMusicPlaying = true;
-            }).catch(e => console.log("Trình duyệt hạn chế autoplay"));
-
+            playMusic();
             createHeartRain();
         }
 
@@ -267,7 +279,7 @@
         function createSingleHeart() {
             const heart = document.createElement("div");
             heart.classList.add("heart");
-            //heart.innerHTML = ["💖", "🌸", "🌷", "✨", "❤️"][Math.floor(Math.random() * 5)];
+            heart.innerHTML = ["💖", "🌸", "🌷", "✨", "❤️"][Math.floor(Math.random() * 5)];
             heart.style.left = Math.random() * 100 + "vw";
             heart.style.animationDuration = (Math.random() * 2 + 3) + "s";
             document.body.appendChild(heart);
