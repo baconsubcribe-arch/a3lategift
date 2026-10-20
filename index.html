@@ -12,7 +12,6 @@
         }
 
         body {
-            background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 99%, #fecfef 100%);
             height: 100vh;
             display: flex;
             justify-content: center;
@@ -20,9 +19,49 @@
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             overflow: hidden;
             position: relative;
+            background-color: #000;
         }
 
-        /* Container chính */
+        /* ----- SLIDER ẢNH NỀN ----- */
+        .bg-slider {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+        }
+
+        .bg-slide {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-size: cover;
+            background-position: center;
+            opacity: 0;
+            transition: opacity 1.5s ease-in-out, transform 6s ease-in-out;
+            transform: scale(1);
+        }
+
+        .bg-slide.active {
+            opacity: 1;
+            transform: scale(1.08); /* Hiệu ứng phóng to nhẹ giúp ảnh sống động */
+        }
+
+        /* Lớp phủ làm tối/hồng nhẹ nền để nổi bật hộp quà & thư */
+        .overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.45); /* Làm mờ ảnh nền một chút để dễ đọc chữ */
+            z-index: 2;
+        }
+
+        /* ----- CONTAINER CHÍNH ----- */
         .container {
             text-align: center;
             position: relative;
@@ -36,6 +75,7 @@
             transition: transform 0.3s ease;
             animation: bounce 1.5s infinite alternate;
             user-select: none;
+            filter: drop-shadow(0 10px 15px rgba(0,0,0,0.3));
         }
 
         .gift-box:hover {
@@ -50,18 +90,20 @@
         .instruction {
             margin-top: 15px;
             font-size: 1.2rem;
-            color: #d63384;
+            color: #ffffff;
             font-weight: bold;
+            text-shadow: 0 2px 8px rgba(0,0,0,0.8);
             animation: fadeIn 2s infinite alternate;
         }
 
-        /* Popup Lá Thư */
+        /* Lá thư chúc */
         .card {
             display: none;
-            background: #ffffff;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(5px);
             padding: 35px 25px 25px 25px;
             border-radius: 20px;
-            box-shadow: 0 15px 35px rgba(0,0,0,0.15);
+            box-shadow: 0 15px 35px rgba(0,0,0,0.3);
             max-width: 90vw;
             width: 400px;
             border: 2px solid #ffb6c1;
@@ -82,7 +124,7 @@
 
         .wish-text {
             font-size: 1.15rem;
-            color: #4a4a4a;
+            color: #333333;
             line-height: 1.6;
             min-height: 90px;
             display: flex;
@@ -92,22 +134,22 @@
             font-style: italic;
         }
 
-        /* Nút Âm Thanh */
+        /* Nút âm thanh */
         .btn-music {
-            background: #70a1ff;
+            background: #ff4757;
             color: white;
             border: none;
-            padding: 10px 20px;
+            padding: 10px 22px;
             border-radius: 25px;
             font-size: 0.95rem;
             font-weight: bold;
             cursor: pointer;
-            box-shadow: 0 4px 10px rgba(112, 161, 255, 0.3);
+            box-shadow: 0 4px 10px rgba(255, 71, 87, 0.4);
             transition: all 0.2s ease;
         }
 
         .btn-music:hover {
-            background: #1e90ff;
+            background: #e84118;
             transform: translateY(-2px);
         }
 
@@ -115,8 +157,9 @@
         .heart {
             position: absolute;
             color: #ff6b81;
-            font-size: 20px;
+            font-size: 24px;
             pointer-events: none;
+            z-index: 15;
             animation: floatUp 4s linear forwards;
         }
 
@@ -128,16 +171,20 @@
 </head>
 <body>
 
-    <!-- Âm thanh nền (Thay link nhạc mp3 của bạn tại đây) -->
+    <!-- Slider Ảnh Nền (Thay danh sách tên ảnh của bạn ở đây) -->
+    <div class="bg-slider" id="bgSlider"></div>
+    <div class="overlay"></div>
+
+    <!-- Nhạc nền (Thay tên file mp3 của bạn) -->
     <audio id="bg-music" loop>
-        <source src="https://cdn.pixabay.com/download/audio/2022/05/27/audio_1808fbf07a.mp3" type="audio/mpeg">
+        <source src="nhac-cua-toi.mp3" type="audio/mpeg">
     </audio>
 
     <div class="container">
         <!-- Hộp quà ban đầu -->
         <div id="gift-wrapper">
             <div class="gift-box" onclick="openGift()">🎁</div>
-            <div class="instruction">Bấm vào hộp quà để nhận điều may mắn! ✨</div>
+            <div class="instruction">Bấm vào hộp quà để mở điều đặc biệt! ✨</div>
         </div>
 
         <!-- Lá thư ngẫu nhiên -->
@@ -151,7 +198,17 @@
     </div>
 
     <script>
-        // 📜 DANH SÁCH LỜI CHÚC NGẪU NHIÊN (Bạn thay đổi/thêm lời chúc ở đây)
+        // 🖼️ 1. DANH SÁCH TÊN BỨC ẢNH CỦA BẠN (Đã upload lên GitHub)
+        const myPhotos = [
+            "anh1.jpg",
+            "anh2.jpg",
+            "anh3.jpg",
+            "anh4.jpg",
+            "anh5.jpg"
+            // Bạn có thể thêm "anh6.jpg", "anh7.jpg"... tùy ý nhé!
+        ];
+
+        // 📜 2. DANH SÁCH LỜI CHÚC NGẪU NHIÊN
         const wishes = [
             "« Chúc bạn một ngày 20/10 thật nhiều niềm vui, luôn xinh đẹp, rạng rỡ và tràn ngập hạnh phúc!  »",
             "« Chúc bạn luôn giữ vững nụ cười trên môi, mọi điều may mắn và thành công luôn mỉm cười với bạn!  »",
@@ -160,28 +217,43 @@
             "« Chúc bạn luôn tự tin bước đi trên con đường mình đã chọn, luôn tỏa sáng và hạnh phúc mỗi ngày!  »"
         ];
 
+        // Khởi tạo Slide ảnh
+        const sliderContainer = document.getElementById("bgSlider");
+        myPhotos.forEach((photoUrl, index) => {
+            const slide = document.createElement("div");
+            slide.classList.add("bg-slide");
+            if (index === 0) slide.classList.add("active");
+            slide.style.backgroundImage = `url('${photoUrl}')`;
+            sliderContainer.appendChild(slide);
+        });
+
+        // Tự động chuyển ảnh nền sau mỗi 3.5 giây
+        let currentSlide = 0;
+        const slides = document.querySelectorAll(".bg-slide");
+        setInterval(() => {
+            slides[currentSlide].classList.remove("active");
+            currentSlide = (currentSlide + 1) % slides.length;
+            slides[currentSlide].classList.add("active");
+        }, 3500);
+
+        // Phát nhạc & Mở quà
         let isMusicPlaying = false;
         const music = document.getElementById("bg-music");
 
-        // Hàm khi người dùng bấm mở hộp quà
         function openGift() {
             document.getElementById("gift-wrapper").style.display = "none";
             document.getElementById("card").style.display = "block";
             
-            // Tự động bốc 1 lời chúc ngẫu nhiên từ danh sách
             const randomIndex = Math.floor(Math.random() * wishes.length);
             document.getElementById("wish").innerText = wishes[randomIndex];
 
-            // Tự động phát nhạc
             music.play().then(() => {
                 isMusicPlaying = true;
-            }).catch(e => console.log("Trình duyệt hạn chế tự động phát nhạc"));
+            }).catch(e => console.log("Trình duyệt hạn chế autoplay"));
 
-            // Phun tim lung linh
             createHeartRain();
         }
 
-        // Bật / Tắt Nhạc
         function toggleMusic() {
             if (isMusicPlaying) {
                 music.pause();
@@ -192,11 +264,10 @@
             }
         }
 
-        // Tạo hiệu ứng tim bay
         function createSingleHeart() {
             const heart = document.createElement("div");
             heart.classList.add("heart");
-            // heart.innerHTML = ["💖", "🌸", "🌷", "✨", "❤️"][Math.floor(Math.random() * 5)];
+            //heart.innerHTML = ["💖", "🌸", "🌷", "✨", "❤️"][Math.floor(Math.random() * 5)];
             heart.style.left = Math.random() * 100 + "vw";
             heart.style.animationDuration = (Math.random() * 2 + 3) + "s";
             document.body.appendChild(heart);
